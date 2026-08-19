@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YMD Art — Digital Gallery</title>
+<style>
+  :root {
+    --orange: #E8621A;
+    --magenta: #CC2B72;
+    --black: #111111;
+    --white: #FFFFFF;
+    --off-white: #F8F8F7;
+    --light-grey: #E8E8E6;
+    --mid-grey: #999;
+    --font-sans: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font-sans);
+    background: var(--white);
+    color: var(--black);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ─── NAV ──────────────────────────────────────────── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: var(--white);
+    border-bottom: 1px solid var(--light-grey);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 32px;
+    height: 60px;
+  }
+
+  .nav-logo {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--black);
+    text-decoration: none;
+  }
+
+  .nav-logo span { color: var(--orange); }
+
+  .nav-links {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--mid-grey);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--orange); }
+
+  /* ─── HERO ──────────────────────────────────────────── */
+  .hero {
+    padding-top: 60px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background: var(--white);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-accent-line {
+    width: 40px;
+    height: 2px;
+    background: var(--orange);
+    margin: 0 auto 28px;
+  }
+
+  .hero-eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--mid-grey);
+    margin-bottom: 16px;
+  }
+
+  .hero-title {
+    font-size: clamp(52px, 10vw, 96px);
+    font-weight: 200;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    color: var(--black);
+    margin-bottom: 24px;
+  }
+
+  .hero-title strong {
+    font-weight: 700;
+  }
+
+  .hero-sub {
+    font-size: 14px;
+    color: var(--mid-grey);
+    letter-spacing: 0.04em;
+    max-width: 380px;
+    line-height: 1.7;
+    margin: 0 auto 40px;
+  }
+
+  .hero-cta {
+    display: inline-block;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--white);
+    background: var(--black);
+    padding: 14px 32px;
+    text-decoration: none;
+    transition: background 0.2s;
+  }
+
+  .hero-cta:hover { background: var(--orange); }
+
+  .hero-scroll-hint {
+    position: absolute;
+    bottom: 32px;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--light-grey);
+  }
+
+  /* ─── SECTION HEADERS ────────────────────────────────── */
+  section { padding: 80px 32px; }
+
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 8px;
+  }
+
+  .section-title {
+    font-size: clamp(24px, 4vw, 38px);
+    font-weight: 200;
+    letter-spacing: -0.01em;
+    margin-bottom: 40px;
+    color: var(--black);
+  }
+
+  /* ─── COLLECTION GRID ────────────────────────────────── */
+  #collection {
+    background: var(--off-white);
+    padding: 80px 24px;
+  }
+
+  #collection .inner {
+    max-width: 1120px;
+    margin: 0 auto;
+  }
+
+  .collection-header {
+    text-align: center;
+    margin-bottom: 60px;
+  }
+
+  .artwork-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 2px;
+  }
+
+  .artwork-card {
+    background: var(--white);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .artwork-thumb {
+    width: 100%;
+    aspect-ratio: 4/5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Placeholder artwork — generated with CSS patterns */
+  .art-1 { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 40%, var(--orange) 100%); }
+  .art-2 { background: radial-gradient(ellipse at 30% 70%, var(--magenta) 0%, #2d1b4e 60%, #0a0a0a 100%); }
+  .art-3 { background: linear-gradient(45deg, #0d0d0d 0%, #1a1a1a 50%, var(--orange) 80%, #fff 100%); }
+  .art-4 { background: conic-gradient(from 180deg at 50% 50%, var(--magenta), #111, var(--orange), var(--magenta)); }
+  .art-5 { background: linear-gradient(180deg, #f5f5f0 0%, #e0d8c8 40%, #8a7a5a 100%); }
+  .art-6 { background: radial-gradient(circle at 80% 20%, var(--orange) 0%, #1a1a1a 50%, var(--magenta) 100%); }
+  .art-7 { background: linear-gradient(120deg, #0a0a14 0%, #1e1435 50%, var(--magenta) 90%, #ff6b9d 100%); }
+  .art-8 { background: repeating-linear-gradient(45deg, #111 0px, #111 20px, var(--orange) 20px, var(--orange) 22px, #111 22px, #111 42px); }
+  .art-9 { background: radial-gradient(ellipse at 50% 50%, #fff8e7 0%, #f5e6c8 30%, #8a6a2a 70%, #3d2a0a 100%); }
+  .art-10 { background: linear-gradient(200deg, var(--magenta) 0%, #4a0030 30%, #0a0a0a 60%, var(--orange) 100%); }
+
+  .artwork-thumb::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--black);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .artwork-card:hover .artwork-thumb::after { opacity: 0.15; }
+
+  .artwork-thumb-label {
+    position: absolute;
+    bottom: 16px;
+    left: 16px;
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    z-index: 1;
+  }
+
+  .artwork-info {
+    padding: 20px 20px 24px;
+    border-top: 1px solid var(--light-grey);
+  }
+
+  .artwork-title {
+    font-size: 15px;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    margin-bottom: 4px;
+  }
+
+  .artwork-meta {
+    font-size: 11px;
+    color: var(--mid-grey);
+    letter-spacing: 0.04em;
+    line-height: 1.7;
+  }
+
+  .artwork-price {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 12px;
+  }
+
+  .artwork-price-val {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--black);
+  }
+
+  .artwork-edition {
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--magenta);
+    border: 1px solid var(--magenta);
+    padding: 3px 8px;
+  }
+
+  /* ─── LIGHTBOX ───────────────────────────────────────── */
+  .lightbox {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    background: rgba(0,0,0,0.92);
+    align-items: center;
+    justify-content: center;
+  }
+
+  .lightbox.open { display: flex; }
+
+  .lightbox-inner {
+    background: var(--white);
+    max-width: 900px;
+    width: 90%;
+    max-height: 90vh;
+    display: flex;
+    overflow: hidden;
+  }
+
+  .lightbox-art {
+    flex: 1;
+    min-height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .lightbox-detail {
+    width: 280px;
+    flex-shrink: 0;
+    padding: 40px 32px;
+    border-left: 1px solid var(--light-grey);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .lightbox-detail .section-label { margin-bottom: 4px; }
+
+  .lightbox-title {
+    font-size: 22px;
+    font-weight: 300;
+    letter-spacing: -0.01em;
+    margin-bottom: 16px;
+  }
+
+  .lightbox-meta {
+    font-size: 12px;
+    color: var(--mid-grey);
+    line-height: 2;
+  }
+
+  .lightbox-meta strong {
+    color: var(--black);
+    font-weight: 500;
+  }
+
+  .lightbox-price-block {
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px solid var(--light-grey);
+  }
+
+  .lightbox-price-label {
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--mid-grey);
+    margin-bottom: 4px;
+  }
+
+  .lightbox-price-val {
+    font-size: 24px;
+    font-weight: 300;
+  }
+
+  .lightbox-enquire {
+    display: inline-block;
+    margin-top: 16px;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--white);
+    background: var(--black);
+    padding: 12px 24px;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    width: 100%;
+    text-align: center;
+    transition: background 0.2s;
+  }
+
+  .lightbox-enquire:hover { background: var(--orange); }
+
+  .lightbox-close {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    width: 40px;
+    height: 40px;
+    background: rgba(255,255,255,0.1);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 20px;
+    transition: background 0.2s;
+  }
+
+  .lightbox-close:hover { background: var(--orange); }
+
+  /* ─── ABOUT ──────────────────────────────────────────── */
+  #about {
+    max-width: 760px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .about-portrait {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--orange) 0%, var(--magenta) 100%);
+    margin: 0 auto 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 36px;
+    color: white;
+    font-weight: 200;
+  }
+
+  .about-text {
+    font-size: 16px;
+    line-height: 1.85;
+    color: #444;
+    font-weight: 300;
+    letter-spacing: 0.01em;
+  }
+
+  .about-text p + p { margin-top: 16px; }
+
+  /* ─── FIND / FOLLOW / BUY ────────────────────────────── */
+  #find {
+    background: var(--black);
+    color: var(--white);
+    text-align: center;
+  }
+
+  #find .section-label { color: var(--orange); }
+
+  #find .section-title { color: var(--white); }
+
+  .channel-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .channel-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 24px;
+    border: 1px solid #333;
+    color: var(--white);
+    text-decoration: none;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    transition: border-color 0.2s, color 0.2s;
+  }
+
+  .channel-link:hover {
+    border-color: var(--orange);
+    color: var(--orange);
+  }
+
+  .channel-link .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--orange);
+    flex-shrink: 0;
+  }
+
+  .channel-link.magenta .dot { background: var(--magenta); }
+
+  /* ─── CONTACT ────────────────────────────────────────── */
+  #contact {
+    text-align: center;
+    background: var(--off-white);
+  }
+
+  .contact-categories {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 40px;
+  }
+
+  .contact-tag {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 8px 20px;
+    border: 1px solid var(--light-grey);
+    color: var(--mid-grey);
+    background: var(--white);
+  }
+
+  .contact-email-link {
+    display: inline-block;
+    font-size: 18px;
+    font-weight: 300;
+    color: var(--black);
+    text-decoration: none;
+    border-bottom: 1px solid var(--orange);
+    padding-bottom: 2px;
+    transition: color 0.2s;
+  }
+
+  .contact-email-link:hover { color: var(--orange); }
+
+  /* ─── FOOTER ──────────────────────────────────────────── */
+  footer {
+    padding: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid var(--light-grey);
+    font-size: 11px;
+    color: var(--mid-grey);
+    letter-spacing: 0.08em;
+  }
+
+  footer .logo { font-weight: 700; color: var(--black); }
+  footer .logo span { color: var(--orange); }
+
+  .footer-accent {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--magenta);
+  }
+
+  /* ─── MOBILE ──────────────────────────────────────────── */
+  @media (max-width: 640px) {
+    nav { padding: 0 20px; }
+    .nav-links { display: none; }
+    section { padding: 60px 20px; }
+    #collection { padding: 60px 16px; }
+    .artwork-grid { grid-template-columns: repeat(2, 1fr); gap: 1px; }
+    .lightbox-inner { flex-direction: column; max-height: 95vh; overflow-y: auto; }
+    .lightbox-art { min-height: 260px; }
+    .lightbox-detail { width: 100%; border-left: none; border-top: 1px solid var(--light-grey); padding: 24px; }
+    footer { flex-direction: column; gap: 12px; text-align: center; }
+    .hero-title { font-size: 48px; }
+    .hero-sub { padding: 0 16px; max-width: 320px; }
+  }
+
+  @media (max-width: 400px) {
+    .artwork-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ─── NAV ────────────────────────────────────────────── -->
+<nav>
+  <a href="#" class="nav-logo">YMD <span>Art</span></a>
+  <ul class="nav-links">
+    <li><a href="#collection">Collection</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- ─── HERO ────────────────────────────────────────────── -->
+<section class="hero">
+  <div class="hero-accent-line"></div>
+  <p class="hero-eyebrow">Original Paintings · Fine Art Prints</p>
+  <h1 class="hero-title"><strong>YMD</strong> Art</h1>
+  <p class="hero-sub">Colour, movement and the human figure — explored through observation, memory and the marks left behind.</p>
+  <a href="#collection" class="hero-cta">View the Collection</a>
+  <p class="hero-scroll-hint">↓ Scroll</p>
+</section>
+
+<!-- ─── COLLECTION ─────────────────────────────────────── -->
+<section id="collection">
+  <div class="inner">
+    <div class="collection-header">
+      <p class="section-label">Launch Collection</p>
+      <h2 class="section-title">The Collection</h2>
+    </div>
+    <div class="artwork-grid" id="artworkGrid"></div>
+  </div>
+</section>
+
+<!-- ─── ABOUT ──────────────────────────────────────────── -->
+<section>
+  <div id="about">
+    <p class="section-label">The Artist</p>
+    <h2 class="section-title">About Yalckun</h2>
+    <div class="about-portrait">Y</div>
+    <div class="about-text">
+      <p>Yalckun is a London-based artist and former ballet dancer. He works with acrylic, oils, ink, watercolour, mixed media and digital painting.</p>
+      <p>He is passionate about colour and explores the possibilities of the human figure in space, stillness and movement. Working from observation and memory, he builds surface interest by overlaying figures and experimenting with what remains when paint is scraped or wiped away.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ─── CONTACT ────────────────────────────────────────── -->
+<section id="contact">
+  <p class="section-label">Get in Touch</p>
+  <h2 class="section-title">Enquiries</h2>
+  <div class="contact-categories">
+    <span class="contact-tag">Artwork Enquiries</span>
+    <span class="contact-tag">Commissions</span>
+    <span class="contact-tag">Exhibitions</span>
+    <span class="contact-tag">General</span>
+  </div>
+  <a href="mailto:hello@ymdart.co.uk" class="contact-email-link">hello@ymdart.co.uk</a>
+</section>
+
+<!-- ─── FOOTER ──────────────────────────────────────────── -->
+<footer>
+  <span class="logo">YMD <span>Art</span></span>
+  <div class="footer-accent"></div>
+  <span>© 2026 YMD Art. All rights reserved.</span>
+</footer>
+
+<!-- ─── LIGHTBOX ─────────────────────────────────────────── -->
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+  <div class="lightbox-inner">
+    <div class="lightbox-art" id="lightboxArt"></div>
+    <div class="lightbox-detail">
+      <div>
+        <p class="section-label" id="lbEdition">Limited Edition</p>
+        <h2 class="lightbox-title" id="lbTitle">—</h2>
+        <div class="lightbox-meta" id="lbMeta"></div>
+      </div>
+      <div class="lightbox-price-block">
+        <p class="lightbox-price-label">Price</p>
+        <p class="lightbox-price-val" id="lbPrice">—</p>
+        <button class="lightbox-enquire" onclick="closeLightbox()">Enquire →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const artworks = [
+  { title: "Female Portrait",            medium: "Print of original painting", size: "29 × 42 cm",                    price: "£70",         edition: "Print", cls: "art-1" },
+  { title: "Male Portrait",              medium: "Print of original painting", size: "29.5 × 41.5 cm",                price: "£70",         edition: "Print", cls: "art-2" },
+  { title: "Portrait of a Couple",       medium: "Print of original painting", size: "29 × 42 cm",                    price: "£70",         edition: "Print", cls: "art-3" },
+  { title: "All About My Mother",        medium: "Print of original painting", size: "29.5 × 38.5 cm / 28 × 21 cm",   price: "£70 / £40",   edition: "Print", cls: "art-4" },
+  { title: "Family Portrait",            medium: "Print of original painting", size: "28 × 42 cm",                    price: "£70",         edition: "Print", cls: "art-5" },
+  { title: "Study in Blue Green and Red",medium: "Print of original painting", size: "29 × 43 cm",                    price: "Price TBC",   edition: "Print", cls: "art-6" },
+  { title: "From Here",                  medium: "Print of digital painting",  size: "28 × 29.5 cm",                  price: "£70",         edition: "Print", cls: "art-7" },
+  { title: "A Family",                   medium: "Print of digital painting",  size: "30 × 30 cm / 21 × 21 cm",       price: "£70 / £40",   edition: "Print", cls: "art-8" },
+  { title: "Four Dancers",               medium: "Print of digital painting",  size: "29.5 × 41.5 cm / 22 × 41.5 cm", price: "£70 (confirm)", edition: "Print", cls: "art-9" },
+  { title: "Mabel",                      medium: "Print of digital painting",  size: "32 × 30 cm / 21 × 19 cm",       price: "£70 / £40",   edition: "Print", cls: "art-10" }
+];
+
+// Build grid
+const grid = document.getElementById('artworkGrid');
+artworks.forEach((a, i) => {
+  const card = document.createElement('div');
+  card.className = 'artwork-card';
+  card.onclick = () => openLightbox(i);
+  card.innerHTML = `
+    <div class="artwork-thumb ${a.cls}">
+      <span class="artwork-thumb-label">Placeholder</span>
+    </div>
+    <div class="artwork-info">
+      <p class="artwork-title">${a.title}</p>
+      <div class="artwork-meta">${a.medium}<br>${a.size}</div>
+      <div class="artwork-price">
+        <span class="artwork-price-val">${a.price}</span>
+        <span class="artwork-edition">${a.edition}</span>
+      </div>
+    </div>
+  `;
+  grid.appendChild(card);
+});
+
+// Lightbox
+function openLightbox(i) {
+  const a = artworks[i];
+  const box = document.getElementById('lightbox');
+  document.getElementById('lightboxArt').className = 'lightbox-art ' + a.cls;
+  document.getElementById('lbTitle').textContent = a.title;
+  document.getElementById('lbEdition').textContent = a.edition;
+  document.getElementById('lbPrice').textContent = a.price;
+  document.getElementById('lbMeta').innerHTML =
+    `<p><strong>Medium</strong><br>${a.medium}</p>
+     <p><strong>Size</strong><br>${a.size}</p>`;
+  box.classList.add('open');
+}
+
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('open');
+}
+
+document.getElementById('lightbox').addEventListener('click', function(e) {
+  if (e.target === this) closeLightbox();
+});
+</script>
+</body>
+</html>
