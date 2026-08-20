@@ -201,6 +201,13 @@
     overflow: hidden;
   }
 
+  .artwork-thumb-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
   /* Placeholder artwork — generated with CSS patterns */
   .art-1 { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 40%, var(--orange) 100%); }
   .art-2 { background: radial-gradient(ellipse at 30% 70%, var(--magenta) 0%, #2d1b4e 60%, #0a0a0a 100%); }
@@ -304,6 +311,14 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    background: var(--light-grey);
+  }
+
+  .lightbox-art-img {
+    max-width: 100%;
+    max-height: 90vh;
+    object-fit: contain;
+    display: block;
   }
 
   .lightbox-detail {
@@ -640,16 +655,17 @@
 
 <script>
 const artworks = [
-  { title: "Female Portrait",            medium: "Print of original painting", size: "29 × 42 cm",                    price: "£70",         edition: "View", cls: "art-1" },
-  { title: "Male Portrait",              medium: "Print of original painting", size: "29.5 × 41.5 cm",                price: "£70",         edition: "View", cls: "art-2" },
-  { title: "Portrait of a Couple",       medium: "Print of original painting", size: "29 × 42 cm",                    price: "£70",         edition: "View", cls: "art-3" },
-  { title: "All About My Mother",        medium: "Print of original painting", size: "29.5 × 38.5 cm / 28 × 21 cm",   price: "£70 / £40",   edition: "View", cls: "art-4" },
-  { title: "Family Portrait",            medium: "Print of original painting", size: "28 × 42 cm",                    price: "£70",         edition: "View", cls: "art-5" },
-  { title: "Study in Blue Green and Red",medium: "Print of original painting", size: "29 × 43 cm",                    price: "Price TBC",   edition: "View", cls: "art-6" },
-  { title: "From Here",                  medium: "Print of digital painting",  size: "28 × 29.5 cm",                  price: "£70",         edition: "View", cls: "art-7" },
-  { title: "A Family",                   medium: "Print of digital painting",  size: "30 × 30 cm / 21 × 21 cm",       price: "£70 / £40",   edition: "View", cls: "art-8" },
-  { title: "Four Dancers",               medium: "Print of digital painting",  size: "29.5 × 41.5 cm / 22 × 41.5 cm", price: "£70 (confirm)", edition: "View", cls: "art-9" },
-  { title: "Mabel",                      medium: "Print of digital painting",  size: "32 × 30 cm / 21 × 19 cm",       price: "£70 / £40",   edition: "View", cls: "art-10" }
+  { title: "Female Portrait",            medium: "Print of original painting", size: "29 × 42 cm",                  price: "£70",       edition: "View", cls: "art-1",  img: "01-female-portrait.jpg" },
+  { title: "All About My Mother",        medium: "Print of original painting", size: "29.5 × 38.5 cm / 28 × 21 cm", price: "£70 / £40", edition: "View", cls: "art-4",  img: "02-all-about-my-mother.jpg" },
+  { title: "Four Dancers",               medium: "Print of digital painting",  size: "29.5 × 41.5 cm",              price: "£70",       edition: "View", cls: "art-9",  img: "03-four-dancers.jpg" },
+  { title: "Four Dancers",               medium: "Print of digital painting",  size: "22 × 41.5 cm",                price: "£70",       edition: "View", cls: "art-9",  img: "04-four-dancers.jpg" },
+  { title: "From Here",                  medium: "Print of digital painting",  size: "28 × 29.5 cm",                price: "£70",       edition: "View", cls: "art-7",  img: "05-from-here.jpg" },
+  { title: "Male Portrait",              medium: "Print of original painting", size: "29.5 × 41.5 cm",              price: "£70",       edition: "View", cls: "art-2",  img: "06-male-portrait.jpg" },
+  { title: "Portrait of a Couple",       medium: "Print of original painting", size: "29 × 42 cm",                  price: "£70",       edition: "View", cls: "art-3",  img: "07-portrait-of-a-couple.jpg" },
+  { title: "Study in Blue Green and Red",medium: "Print of original painting", size: "29 × 43 cm",                  price: "£70",       edition: "View", cls: "art-6",  img: "08-study-in-blue-green-and-red.jpg" },
+  { title: "A Family",                   medium: "Print of digital painting",  size: "30 × 30 cm / 21 × 21 cm",     price: "£70 / £40", edition: "View", cls: "art-8",  img: "09-a-family.jpg" },
+  { title: "Mabel",                      medium: "Print of digital painting",  size: "32 × 30 cm / 21 × 19 cm",     price: "£70 / £40", edition: "View", cls: "art-10", img: "10-mabel.jpg" },
+  { title: "Family Portrait",            medium: "Print of original painting", size: "28 × 42 cm",                  price: "£70",       edition: "View", cls: "art-5",  img: "11-family-portrait.jpg" }
 ];
 
 // Build grid
@@ -660,7 +676,7 @@ artworks.forEach((a, i) => {
   card.onclick = () => openLightbox(i);
   card.innerHTML = `
     <div class="artwork-thumb ${a.cls}">
-      <span class="artwork-thumb-label">Placeholder</span>
+      <img class="artwork-thumb-img" src="images/${a.img}" alt="${a.title}, ${a.medium}" loading="lazy">
     </div>
     <div class="artwork-info">
       <p class="artwork-title">${a.title}</p>
@@ -678,7 +694,8 @@ artworks.forEach((a, i) => {
 function openLightbox(i) {
   const a = artworks[i];
   const box = document.getElementById('lightbox');
-  document.getElementById('lightboxArt').className = 'lightbox-art ' + a.cls;
+  document.getElementById('lightboxArt').className = 'lightbox-art';
+  document.getElementById('lightboxArt').innerHTML = `<img class="lightbox-art-img" src="images/${a.img}" alt="${a.title}, ${a.medium}">`;
   document.getElementById('lbTitle').textContent = a.title;
   document.getElementById('lbEdition').textContent = a.edition;
   document.getElementById('lbPrice').textContent = a.price;
