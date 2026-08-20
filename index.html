@@ -50,7 +50,9 @@
     text-decoration: none;
   }
 
-  .nav-logo span { color: var(--orange); }
+  .nav-logo { color: #FF8948; }
+
+  .nav-logo span { color: #FA0009; }
 
   .nav-links {
     display: flex;
@@ -109,6 +111,11 @@
 
   .hero-title strong {
     font-weight: 700;
+    color: #FF8948;
+  }
+
+  .hero-title-art {
+    color: #FA0009;
   }
 
   .hero-sub {
@@ -132,7 +139,9 @@
     transition: background 0.2s;
   }
 
-  .hero-cta:hover { background: var(--orange); }
+  .hero-cta { background: #FF8648; }
+
+  .hero-cta:hover { background: var(--black); }
 
   .hero-scroll-hint {
     position: absolute;
@@ -263,7 +272,7 @@
 
   .artwork-price {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     align-items: center;
     margin-top: 12px;
   }
@@ -583,7 +592,7 @@
 <section class="hero">
   <div class="hero-accent-line"></div>
   <p class="hero-eyebrow">Original Paintings · Fine Art Prints</p>
-  <h1 class="hero-title"><strong>YMD</strong> Art</h1>
+  <h1 class="hero-title"><strong>YMD</strong> <span class="hero-title-art">Art</span></h1>
   <p class="hero-sub">Colour, movement and the human figure — explored through observation, memory and the marks left behind.</p>
   <a href="#collection" class="hero-cta">View the Collection</a>
   <p class="hero-scroll-hint">↓ Scroll</p>
@@ -680,9 +689,7 @@ artworks.forEach((a, i) => {
     </div>
     <div class="artwork-info">
       <p class="artwork-title">${a.title}</p>
-      <div class="artwork-meta">${a.medium}<br>${a.size}</div>
       <div class="artwork-price">
-        <span class="artwork-price-val">${a.price}</span>
         <span class="artwork-edition">${a.edition}</span>
       </div>
     </div>
