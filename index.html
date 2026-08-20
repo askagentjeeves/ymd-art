@@ -567,6 +567,22 @@
     background: var(--magenta);
   }
 
+  .footer-rights {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+    text-align: right;
+  }
+
+  .footer-usage {
+    max-width: 420px;
+    font-size: 10px;
+    letter-spacing: 0.04em;
+    color: var(--mid-grey);
+    line-height: 1.5;
+  }
+
   /* ─── MOBILE ──────────────────────────────────────────── */
   @media (max-width: 640px) {
     nav { padding: 0 20px; }
@@ -578,6 +594,7 @@
     .lightbox-art { min-height: 260px; }
     .lightbox-detail { width: 100%; border-left: none; border-top: 1px solid var(--light-grey); padding: 24px; }
     footer { flex-direction: column; gap: 12px; text-align: center; }
+    .footer-rights { align-items: center; text-align: center; }
     .hero-title { font-size: 48px; }
     .hero-sub { padding: 0 16px; max-width: 320px; }
   }
@@ -650,7 +667,10 @@
 <footer>
   <span class="logo">YMD <span>Art</span></span>
   <div class="footer-accent"></div>
-  <span>© 2026 Yalckun — YMD Art. All rights reserved.</span>
+  <div class="footer-rights">
+    <span>© 2026 Yalckun — YMD Art. All rights reserved.</span>
+    <span class="footer-usage">No images or artwork may be downloaded, reproduced, copied, projected or used for commercial or digital purposes without explicit written permission from the artist.</span>
+  </div>
 </footer>
 
 <!-- ─── LIGHTBOX ─────────────────────────────────────────── -->
