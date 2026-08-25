@@ -696,7 +696,7 @@
       <div class="lightbox-price-block">
         <p class="lightbox-price-label">Price</p>
         <p class="lightbox-price-val" id="lbPrice">—</p>
-        <button class="lightbox-enquire" onclick="closeLightbox()">Enquire →</button>
+        <a class="lightbox-enquire" id="lbEnquire" href="#">Enquire →</a>
       </div>
     </div>
   </div>
@@ -749,6 +749,8 @@ function openLightbox(i) {
   document.getElementById('lbMeta').innerHTML =
     `<p><strong>Medium</strong><br>${a.medium}</p>
      <p><strong>Size</strong><br>${a.size}</p>`;
+  document.getElementById('lbEnquire').href =
+    `mailto:hello@ymdart.co.uk?subject=${encodeURIComponent('Enquiry: ' + a.title)}&body=${encodeURIComponent('Hi Yalckun,\n\nI\u2019m interested in "' + a.title + '" and would like to know more.\n\n')}`;
   box.classList.add('open');
 }
 
