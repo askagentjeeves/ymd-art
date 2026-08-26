@@ -371,6 +371,9 @@
     background: var(--light-grey);
     padding: 28px;
     box-sizing: border-box;
+    position: relative;
+    overflow: hidden;
+    touch-action: none;
   }
 
   .lightbox-art-img {
@@ -378,10 +381,31 @@
     max-height: 90vh;
     object-fit: contain;
     display: block;
-    -webkit-transform: translateZ(0);
-    transform: translateZ(0);
+    transform-origin: center center;
+    will-change: transform;
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-user-drag: none;
+  }
+
+  .zoom-hint {
+    position: absolute;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0,0,0,0.55);
+    color: #fff;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 6px 12px;
+    border-radius: 20px;
+    pointer-events: none;
+    transition: opacity 0.3s;
+    display: none;
   }
 
   .lightbox-detail {
@@ -634,8 +658,9 @@
     #collection { padding: 60px 16px; }
     .artwork-grid { grid-template-columns: repeat(2, 1fr); gap: 1px; }
     .lightbox-inner { flex-direction: column; max-height: 95vh; overflow-y: auto; }
-    .lightbox-art { min-height: 260px; padding: 24px; justify-content: flex-start; }
-    .lightbox-art-img { max-height: 45vh; }
+    .lightbox-art { min-height: 62vh; padding: 12px; justify-content: center; }
+    .lightbox-art-img { max-height: 72vh; }
+    .zoom-hint { display: block; }
     .lightbox-detail { width: 100%; border-left: none; border-top: 1px solid var(--light-grey); padding: 24px; }
     footer { flex-direction: column; gap: 12px; text-align: center; }
     .footer-rights { align-items: center; text-align: center; }
@@ -777,7 +802,8 @@ function openLightbox(i) {
   const a = artworks[i];
   const box = document.getElementById('lightbox');
   document.getElementById('lightboxArt').className = 'lightbox-art';
-  document.getElementById('lightboxArt').innerHTML = `<img class="lightbox-art-img" src="images/${a.img}" alt="${a.title}, ${a.medium}">`;
+  document.getElementById('lightboxArt').innerHTML = `<img class="lightbox-art-img" src="images/${a.img}" alt="${a.title}, ${a.medium}"><span class="zoom-hint">Pinch or double-tap to zoom</span>`;
+  resetZoom();
   document.getElementById('lbTitle').textContent = a.title;
   document.getElementById('lbEdition').textContent = a.edition;
   document.getElementById('lbPrice').textContent = a.price;
@@ -791,10 +817,100 @@ function openLightbox(i) {
 
 function closeLightbox() {
   document.getElementById('lightbox').classList.remove('open');
+  resetZoom();
 }
 
 document.getElementById('lightbox').addEventListener('click', function(e) {
   if (e.target === this) closeLightbox();
+});
+
+// ─── Self-contained pinch / pan / double-tap zoom (page never zooms) ───
+const artBox = document.getElementById('lightboxArt');
+const MIN_SCALE = 1, MAX_SCALE = 4;
+let zScale = 1, zX = 0, zY = 0;
+let startDist = 0, startScale = 1;
+let panStartX = 0, panStartY = 0, panOrigX = 0, panOrigY = 0;
+let isPanning = false, lastTap = 0;
+
+function zImg() { return artBox.querySelector('.lightbox-art-img'); }
+
+function applyZoom() {
+  const img = zImg();
+  if (!img) return;
+  img.style.transform = `translate(${zX}px, ${zY}px) scale(${zScale})`;
+  const hint = artBox.querySelector('.zoom-hint');
+  if (hint) hint.style.opacity = zScale > 1 ? '0' : '1';
+}
+
+function resetZoom() {
+  zScale = 1; zX = 0; zY = 0;
+  applyZoom();
+}
+
+function clampPan() {
+  const img = zImg();
+  if (!img) return;
+  const maxX = Math.max(0, (img.offsetWidth * zScale - artBox.clientWidth) / 2);
+  const maxY = Math.max(0, (img.offsetHeight * zScale - artBox.clientHeight) / 2);
+  zX = Math.max(-maxX, Math.min(maxX, zX));
+  zY = Math.max(-maxY, Math.min(maxY, zY));
+}
+
+function touchDist(a, b) {
+  return Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY);
+}
+
+artBox.addEventListener('touchstart', function(e) {
+  if (e.touches.length === 2) {
+    startDist = touchDist(e.touches[0], e.touches[1]);
+    startScale = zScale;
+    isPanning = false;
+  } else if (e.touches.length === 1) {
+    const now = Date.now();
+    if (now - lastTap < 300) {
+      e.preventDefault();
+      if (zScale > 1) resetZoom();
+      else { zScale = 2.5; clampPan(); applyZoom(); }
+      lastTap = 0;
+      return;
+    }
+    lastTap = now;
+    if (zScale > 1) {
+      isPanning = true;
+      panStartX = e.touches[0].clientX;
+      panStartY = e.touches[0].clientY;
+      panOrigX = zX; panOrigY = zY;
+    }
+  }
+}, { passive: false });
+
+artBox.addEventListener('touchmove', function(e) {
+  if (e.touches.length === 2) {
+    e.preventDefault();
+    const d = touchDist(e.touches[0], e.touches[1]);
+    if (startDist > 0) {
+      zScale = Math.max(MIN_SCALE, Math.min(MAX_SCALE, startScale * (d / startDist)));
+      clampPan();
+      applyZoom();
+    }
+  } else if (e.touches.length === 1 && isPanning && zScale > 1) {
+    e.preventDefault();
+    zX = panOrigX + (e.touches[0].clientX - panStartX);
+    zY = panOrigY + (e.touches[0].clientY - panStartY);
+    clampPan();
+    applyZoom();
+  }
+}, { passive: false });
+
+artBox.addEventListener('touchend', function(e) {
+  if (zScale <= 1) resetZoom();
+  if (e.touches.length === 0) isPanning = false;
+});
+
+// Desktop convenience: double-click toggles zoom
+artBox.addEventListener('dblclick', function() {
+  if (zScale > 1) resetZoom();
+  else { zScale = 2.5; clampPan(); applyZoom(); }
 });
 </script>
 </body>
