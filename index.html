@@ -272,6 +272,14 @@
     height: 100%;
     object-fit: contain;
     display: block;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-user-drag: none;
+  }
+
+  .artwork-card:focus-visible {
+    outline: 2px solid var(--orange);
+    outline-offset: 2px;
   }
 
   /* Matting behind contained artwork images */
@@ -498,6 +506,8 @@
   }
 
   .lightbox-close:hover { background: var(--orange); }
+
+  .lightbox-close:focus-visible { outline: 2px solid var(--orange); outline-offset: 2px; }
 
   /* ─── ABOUT ──────────────────────────────────────────── */
   #about {
@@ -747,8 +757,8 @@
 </footer>
 
 <!-- ─── LIGHTBOX ─────────────────────────────────────────── -->
-<div class="lightbox" id="lightbox">
-  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Artwork detail">
+  <button class="lightbox-close" onclick="closeLightbox()" aria-label="Close">✕</button>
   <div class="lightbox-inner">
     <div class="lightbox-art" id="lightboxArt"></div>
     <div class="lightbox-detail">
@@ -768,17 +778,17 @@
 
 <script>
 const artworks = [
-  { title: "Female Portrait",            medium: "Print of original painting", size: "29 × 42 cm",                  price: "£70",       edition: "View", cls: "art-1",  img: "01-female-portrait.jpg" },
-  { title: "All About My Mother",        medium: "Print of original painting", size: "29.5 × 38.5 cm / 28 × 21 cm", price: "£70 / £40", edition: "View", cls: "art-4",  img: "02-all-about-my-mother.jpg" },
-  { title: "Four Dancers",               medium: "Print of digital painting",  size: "29.5 × 41.5 cm",              price: "£70",       edition: "View", cls: "art-9",  img: "03-four-dancers.jpg" },
-  { title: "Four Dancers",               medium: "Print of digital painting",  size: "22 × 41.5 cm",                price: "£70",       edition: "View", cls: "art-9",  img: "04-four-dancers.jpg" },
-  { title: "From Here",                  medium: "Print of digital painting",  size: "28 × 29.5 cm",                price: "£70",       edition: "View", cls: "art-7",  img: "05-from-here.jpg" },
-  { title: "Male Portrait",              medium: "Print of original painting", size: "29.5 × 41.5 cm",              price: "£70",       edition: "View", cls: "art-2",  img: "06-male-portrait.jpg" },
-  { title: "Portrait of a Couple",       medium: "Print of original painting", size: "29 × 42 cm",                  price: "£70",       edition: "View", cls: "art-3",  img: "07-portrait-of-a-couple.jpg" },
-  { title: "Study in Blue Green and Red",medium: "Print of original painting", size: "29 × 43 cm",                  price: "£70",       edition: "View", cls: "art-6",  img: "08-study-in-blue-green-and-red.jpg" },
-  { title: "A Family",                   medium: "Print of digital painting",  size: "30 × 30 cm / 21 × 21 cm",     price: "£70 / £40", edition: "View", cls: "art-8",  img: "09-a-family.jpg" },
-  { title: "Mabel",                      medium: "Print of digital painting",  size: "32 × 30 cm / 21 × 19 cm",     price: "£70 / £40", edition: "View", cls: "art-10", img: "10-mabel.jpg" },
-  { title: "Family Portrait",            medium: "Print of original painting", size: "28 × 42 cm",                  price: "£70",       edition: "View", cls: "art-5",  img: "11-family-portrait.jpg" }
+  { title: "Female Portrait",            medium: "Print of original painting", size: "29 × 42 cm",                  price: "£70",       edition: "Available", cls: "art-1",  img: "01-female-portrait.jpg",              w: 1272, h: 1800 },
+  { title: "All About My Mother",        medium: "Print of original painting", size: "29.5 × 38.5 cm / 28 × 21 cm", price: "£70 / £40", edition: "Available", cls: "art-4",  img: "02-all-about-my-mother.jpg",          w: 1800, h: 1272 },
+  { title: "Four Dancers",               medium: "Print of digital painting",  size: "29.5 × 41.5 cm",              price: "£70",       edition: "Available", cls: "art-9",  img: "03-four-dancers.jpg",                 w: 1292, h: 1800 },
+  { title: "Four Dancers",               medium: "Print of digital painting",  size: "22 × 41.5 cm",                price: "£70",       edition: "Available", cls: "art-9",  img: "04-four-dancers.jpg",                 w: 957,  h: 1800 },
+  { title: "From Here",                  medium: "Print of digital painting",  size: "28 × 29.5 cm",                price: "£70",       edition: "Available", cls: "art-7",  img: "05-from-here.jpg",                    w: 1799, h: 1707 },
+  { title: "Male Portrait",              medium: "Print of original painting", size: "29.5 × 41.5 cm",              price: "£70",       edition: "Available", cls: "art-2",  img: "06-male-portrait.jpg",                w: 1272, h: 1800 },
+  { title: "Portrait of a Couple",       medium: "Print of original painting", size: "29 × 42 cm",                  price: "£70",       edition: "Available", cls: "art-3",  img: "07-portrait-of-a-couple.jpg",         w: 1272, h: 1800 },
+  { title: "Study in Blue Green and Red",medium: "Print of original painting", size: "29 × 43 cm",                  price: "£70",       edition: "Available", cls: "art-6",  img: "08-study-in-blue-green-and-red.jpg",  w: 1272, h: 1800 },
+  { title: "A Family",                   medium: "Print of digital painting",  size: "30 × 30 cm / 21 × 21 cm",     price: "£70 / £40", edition: "Available", cls: "art-8",  img: "09-a-family.jpg",                     w: 1800, h: 1800 },
+  { title: "Mabel",                      medium: "Print of digital painting",  size: "32 × 30 cm / 21 × 19 cm",     price: "£70 / £40", edition: "Available", cls: "art-10", img: "10-mabel.jpg",                        w: 1800, h: 1664 },
+  { title: "Family Portrait",            medium: "Print of original painting", size: "28 × 42 cm",                  price: "£70",       edition: "Available", cls: "art-5",  img: "11-family-portrait.jpg",              w: 1272, h: 1800 }
 ];
 
 // Build grid
@@ -786,13 +796,21 @@ const grid = document.getElementById('artworkGrid');
 artworks.forEach((a, i) => {
   const card = document.createElement('div');
   card.className = 'artwork-card';
-  card.onclick = () => openLightbox(i);
+  card.tabIndex = 0;
+  card.setAttribute('role', 'button');
+  card.setAttribute('aria-label', `View ${a.title}, larger image and details`);
+  const thumb600 = a.img.replace('.jpg', '-w600.jpg');
+  card.onclick = () => openLightbox(i, card);
+  card.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openLightbox(i, card); }
+  });
   card.innerHTML = `
     <div class="artwork-thumb ${a.cls}">
-      <img class="artwork-thumb-img" src="images/${a.img}" alt="${a.title}, ${a.medium}" loading="lazy">
+      <img class="artwork-thumb-img" src="images/${a.img}" srcset="images/${thumb600} 600w, images/${a.img} ${a.w}w" sizes="(max-width: 400px) 100vw, (max-width: 640px) 50vw, (max-width: 1024px) 33vw, 280px" width="${a.w}" height="${a.h}" alt="${a.title}, ${a.medium}" loading="lazy">
     </div>
     <div class="artwork-info">
       <p class="artwork-title">${a.title}</p>
+      <p class="artwork-meta">${a.size.split(' / ')[0]}</p>
       <div class="artwork-price">
         <span class="artwork-edition">${a.edition}</span>
       </div>
@@ -802,7 +820,9 @@ artworks.forEach((a, i) => {
 });
 
 // Lightbox
-function openLightbox(i) {
+let lastFocusedEl = null;
+function openLightbox(i, trigger) {
+  lastFocusedEl = trigger || document.activeElement;
   const a = artworks[i];
   const box = document.getElementById('lightbox');
   document.getElementById('lightboxArt').className = 'lightbox-art';
@@ -817,15 +837,25 @@ function openLightbox(i) {
   document.getElementById('lbEnquire').href =
     `mailto:hello@ymdart.co.uk?subject=${encodeURIComponent('Enquiry: ' + a.title)}&body=${encodeURIComponent('Hi Yalckun,\n\nI\u2019m interested in "' + a.title + '" and would like to know more.\n\n')}`;
   box.classList.add('open');
+  document.querySelector('.lightbox-close').focus();
 }
 
 function closeLightbox() {
   document.getElementById('lightbox').classList.remove('open');
   resetZoom();
+  if (lastFocusedEl) lastFocusedEl.focus();
 }
 
 document.getElementById('lightbox').addEventListener('click', function(e) {
   if (e.target === this) closeLightbox();
+});
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape' && document.getElementById('lightbox').classList.contains('open')) closeLightbox();
+});
+
+document.addEventListener('contextmenu', function(e) {
+  if (e.target.tagName === 'IMG') e.preventDefault();
 });
 
 // ─── Self-contained pinch / pan / double-tap zoom (page never zooms) ───
