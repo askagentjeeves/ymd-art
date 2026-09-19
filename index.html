@@ -319,6 +319,18 @@
     margin-bottom: 4px;
   }
 
+  .artwork-marker {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 8px;
+    vertical-align: middle;
+    position: relative;
+    top: -1px;
+    flex-shrink: 0;
+  }
+
   .artwork-meta {
     font-size: 11px;
     color: var(--mid-grey);
@@ -783,17 +795,17 @@
 
 <script>
 const artworks = [
-  { title: "Female Portrait",            medium: "Print of original painting", size: "29 × 42 cm",                  price: "£70",       edition: "Available", cls: "art-1",  img: "01-female-portrait.jpg",              w: 1272, h: 1800 },
-  { title: "All About My Mother",        medium: "Print of original painting", size: "29.5 × 38.5 cm / 28 × 21 cm", price: "£70 / £40", edition: "Available", cls: "art-4",  img: "02-all-about-my-mother.jpg",          w: 1800, h: 1272 },
-  { title: "Four Dancers (magenta)",     medium: "Print of digital painting",  size: "29.5 × 41.5 cm",              price: "£70",       edition: "Available", cls: "art-9",  img: "03-four-dancers.jpg",                 w: 1292, h: 1800 },
-  { title: "Four Dancers (orange)",      medium: "Print of digital painting",  size: "22 × 41.5 cm",                price: "£70",       edition: "Available", cls: "art-9",  img: "04-four-dancers.jpg",                 w: 957,  h: 1800 },
-  { title: "From Here",                  medium: "Print of digital painting",  size: "28 × 29.5 cm",                price: "£70",       edition: "Available", cls: "art-7",  img: "05-from-here.jpg",                    w: 1799, h: 1707 },
-  { title: "Male Portrait",              medium: "Print of original painting", size: "29.5 × 41.5 cm",              price: "£70",       edition: "Available", cls: "art-2",  img: "06-male-portrait.jpg",                w: 1272, h: 1800 },
-  { title: "Portrait of a Couple",       medium: "Print of original painting", size: "29 × 42 cm",                  price: "£70",       edition: "Available", cls: "art-3",  img: "07-portrait-of-a-couple.jpg",         w: 1272, h: 1800 },
-  { title: "Study in Blue Green and Red",medium: "Print of original painting", size: "29 × 43 cm",                  price: "£70",       edition: "Available", cls: "art-6",  img: "08-study-in-blue-green-and-red.jpg",  w: 1272, h: 1800 },
-  { title: "A Family",                   medium: "Print of digital painting",  size: "30 × 30 cm / 21 × 21 cm",     price: "£70 / £40", edition: "Available", cls: "art-8",  img: "09-a-family.jpg",                     w: 1800, h: 1800 },
-  { title: "Mabel",                      medium: "Print of digital painting",  size: "32 × 30 cm / 21 × 19 cm",     price: "£70 / £40", edition: "Available", cls: "art-10", img: "10-mabel.jpg",                        w: 1800, h: 1664 },
-  { title: "Family Portrait",            medium: "Print of original painting", size: "28 × 42 cm",                  price: "£70",       edition: "Available", cls: "art-5",  img: "11-family-portrait.jpg",              w: 1272, h: 1800,
+  { title: "Female Portrait",            medium: "Print of original painting", size: "29 × 42 cm",                  price: "£70",       edition: "Available", cls: "art-1",  accent: "#B77E12", img: "01-female-portrait.jpg",              w: 1272, h: 1800 },
+  { title: "All About My Mother",        medium: "Print of original painting", size: "29.5 × 38.5 cm / 28 × 21 cm", price: "£70 / £40", edition: "Available", cls: "art-4",  accent: "#CF293E", img: "02-all-about-my-mother.jpg",          w: 1800, h: 1272 },
+  { title: "Four Dancers (magenta)",     medium: "Print of digital painting",  size: "29.5 × 41.5 cm",              price: "£70",       edition: "Available", cls: "art-9",  accent: "#CC2B72", img: "03-four-dancers.jpg",                 w: 1292, h: 1800 },
+  { title: "Four Dancers (orange)",      medium: "Print of digital painting",  size: "22 × 41.5 cm",                price: "£70",       edition: "Available", cls: "art-9",  accent: "#E8621A", img: "04-four-dancers.jpg",                 w: 957,  h: 1800 },
+  { title: "From Here",                  medium: "Print of digital painting",  size: "28 × 29.5 cm",                price: "£70",       edition: "Available", cls: "art-7",  accent: "#1B6AC3", img: "05-from-here.jpg",                    w: 1799, h: 1707 },
+  { title: "Male Portrait",              medium: "Print of original painting", size: "29.5 × 41.5 cm",              price: "£70",       edition: "Available", cls: "art-2",  accent: "#B0503F", img: "06-male-portrait.jpg",                w: 1272, h: 1800 },
+  { title: "Portrait of a Couple",       medium: "Print of original painting", size: "29 × 42 cm",                  price: "£70",       edition: "Available", cls: "art-3",  accent: "#DC5B3A", img: "07-portrait-of-a-couple.jpg",         w: 1272, h: 1800 },
+  { title: "Study in Blue Green and Red",medium: "Print of original painting", size: "29 × 43 cm",                  price: "£70",       edition: "Available", cls: "art-6",  accent: "#3A7CA5", img: "08-study-in-blue-green-and-red.jpg",  w: 1272, h: 1800 },
+  { title: "A Family",                   medium: "Print of digital painting",  size: "30 × 30 cm / 21 × 21 cm",     price: "£70 / £40", edition: "Available", cls: "art-8",  accent: "#F9441A", img: "09-a-family.jpg",                     w: 1800, h: 1800 },
+  { title: "Mabel",                      medium: "Print of digital painting",  size: "32 × 30 cm / 21 × 19 cm",     price: "£70 / £40", edition: "Available", cls: "art-10", accent: "#FD6B04", img: "10-mabel.jpg",                        w: 1800, h: 1664 },
+  { title: "Family Portrait",            medium: "Print of original painting", size: "28 × 42 cm",                  price: "£70",       edition: "Available", cls: "art-5",  accent: "#5A95EE", img: "11-family-portrait.jpg",              w: 1272, h: 1800,
     extra: { title: "Family Portrait original", medium: "Acrylics, oil stick and chalk on wood panel", size: "Width 61 cm × Height 92 cm", price: "POA" } }
 ];
 
@@ -815,7 +827,7 @@ artworks.forEach((a, i) => {
       <img class="artwork-thumb-img" src="images/${a.img}" srcset="images/${thumb600} 600w, images/${a.img} ${a.w}w" sizes="(max-width: 400px) 100vw, (max-width: 640px) 50vw, (max-width: 1024px) 33vw, 280px" width="${a.w}" height="${a.h}" alt="${a.title}, ${a.medium}" loading="lazy">
     </div>
     <div class="artwork-info">
-      <p class="artwork-title">${a.title}</p>
+      <p class="artwork-title"><span class="artwork-marker" style="background:${a.accent}"></span>${a.title}</p>
       <p class="artwork-meta">${a.size.split(' / ')[0]}</p>
       <div class="artwork-price">
         <span class="artwork-edition">View</span>
