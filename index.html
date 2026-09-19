@@ -309,7 +309,6 @@
 
   .artwork-info {
     padding: 20px 20px 24px;
-    border-top: 1px solid var(--light-grey);
   }
 
   .artwork-title {
@@ -319,16 +318,13 @@
     margin-bottom: 4px;
   }
 
-  .artwork-marker {
-    display: inline-block;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    margin-right: 8px;
-    vertical-align: middle;
-    position: relative;
-    top: -1px;
-    flex-shrink: 0;
+  .artwork-divider {
+    display: block;
+    width: 32px;
+    height: 1px;
+    background: var(--mid-grey);
+    opacity: 0.55;
+    margin: 16px auto 4px;
   }
 
   .artwork-meta {
@@ -827,11 +823,12 @@ artworks.forEach((a, i) => {
       <img class="artwork-thumb-img" src="images/${a.img}" srcset="images/${thumb600} 600w, images/${a.img} ${a.w}w" sizes="(max-width: 400px) 100vw, (max-width: 640px) 50vw, (max-width: 1024px) 33vw, 280px" width="${a.w}" height="${a.h}" alt="${a.title}, ${a.medium}" loading="lazy">
     </div>
     <div class="artwork-info">
-      <p class="artwork-title"><span class="artwork-marker" style="background:${a.accent}"></span>${a.title}</p>
+      <p class="artwork-title">${a.title}</p>
       <p class="artwork-meta">${a.size.split(' / ')[0]}</p>
       <div class="artwork-price">
         <span class="artwork-edition">View</span>
       </div>
+      <span class="artwork-divider"></span>
     </div>
   `;
   grid.appendChild(card);
