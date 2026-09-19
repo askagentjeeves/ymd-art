@@ -365,6 +365,7 @@
     background: var(--white);
     align-items: center;
     justify-content: center;
+    overscroll-behavior: none;
   }
 
   .lightbox.open { display: flex; }
@@ -377,6 +378,8 @@
     display: flex;
     flex-direction: column;
     overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
   }
 
   .lightbox-art {
