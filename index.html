@@ -320,11 +320,11 @@
 
   .artwork-divider {
     display: block;
-    width: 32px;
+    width: 70px;
     height: 1px;
     background: var(--mid-grey);
     opacity: 0.55;
-    margin: 16px auto 4px;
+    margin: 18px auto 6px;
   }
 
   .artwork-meta {
@@ -336,7 +336,7 @@
 
   .artwork-price {
     display: flex;
-    justify-content: flex-end;
+    justify-content: flex-start;
     align-items: center;
     margin-top: 12px;
   }
@@ -390,6 +390,12 @@
     box-sizing: border-box;
     position: relative;
     overflow: hidden;
+    touch-action: pan-y;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* When zoomed in, capture all touch gestures for pan/pinch (no page scroll). */
+  .lightbox-art.zoomed {
     touch-action: none;
   }
 
@@ -402,7 +408,7 @@
     will-change: transform;
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
-    touch-action: none;
+    touch-action: pan-y;
     user-select: none;
     -webkit-user-select: none;
     -webkit-user-drag: none;
@@ -867,11 +873,13 @@ function openLightbox(i, trigger) {
   document.getElementById('lbEnquire').href =
     `mailto:hello@ymdart.co.uk?subject=${encodeURIComponent('Enquiry: ' + a.title)}&body=${encodeURIComponent('Hi Yalckun,\n\nI\u2019m interested in "' + a.title + '" and would like to know more.\n\n')}`;
   box.classList.add('open');
+  document.body.style.overflow = 'hidden';
   document.querySelector('.lightbox-close').focus();
 }
 
 function closeLightbox() {
   document.getElementById('lightbox').classList.remove('open');
+  document.body.style.overflow = '';
   resetZoom();
   if (lastFocusedEl) lastFocusedEl.focus();
 }
@@ -902,8 +910,8 @@ function applyZoom() {
   const img = zImg();
   if (!img) return;
   img.style.transform = `translate(${zX}px, ${zY}px) scale(${zScale})`;
-  const hint = artBox.querySelector('.zoom-hint');
-  if (hint) hint.style.opacity = zScale > 1 ? '0' : '1';
+  // Only trap touch (block panel scroll) while actually zoomed in.
+  artBox.classList.toggle('zoomed', zScale > 1);
 }
 
 function resetZoom() {
