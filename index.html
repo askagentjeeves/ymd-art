@@ -362,9 +362,11 @@
     position: fixed;
     inset: 0;
     z-index: 200;
-    background: var(--white);
+    background: rgba(17,17,17,0.55);
     align-items: center;
     justify-content: center;
+    padding: 32px;
+    box-sizing: border-box;
     overscroll-behavior: none;
   }
 
@@ -380,7 +382,52 @@
     overflow-y: auto;
     overscroll-behavior: contain;
     -webkit-overflow-scrolling: touch;
+    border-radius: 8px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+    position: relative;
   }
+
+  /* Sticky white header inside the panel */
+  .lightbox-header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--white);
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--light-grey);
+    border-radius: 8px 8px 0 0;
+  }
+
+  .lightbox-header-label {
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--mid-grey);
+  }
+
+  .lightbox-header-close {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: transparent;
+    border: 1px solid var(--light-grey);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--black);
+    font-size: 17px;
+    line-height: 1;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+  }
+
+  .lightbox-header-close:hover { background: var(--orange); color: #fff; border-color: var(--orange); }
+
+  .lightbox-header-close:focus-visible { outline: 2px solid var(--orange); outline-offset: 2px; }
 
   .lightbox-art {
     flex: none;
@@ -421,8 +468,7 @@
     width: 100%;
     box-sizing: border-box;
     flex-shrink: 0;
-    padding: 32px;
-    border-top: 1px solid var(--light-grey);
+    padding: 22px 28px 28px;
     display: flex;
     flex-direction: column;
   }
@@ -430,8 +476,8 @@
   .lightbox-detail .section-label { margin-bottom: 4px; }
 
   .lightbox-extra {
-    margin-top: 24px;
-    padding-top: 24px;
+    margin-top: 16px;
+    padding-top: 16px;
     border-top: 1px solid var(--light-grey);
   }
 
@@ -440,27 +486,27 @@
     letter-spacing: 0.18em;
     text-transform: uppercase;
     color: var(--mid-grey);
-    margin-bottom: 6px;
+    margin-bottom: 4px;
   }
 
   .lightbox-extra-title {
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 400;
     letter-spacing: -0.01em;
-    margin-bottom: 12px;
+    margin-bottom: 8px;
   }
 
   .lightbox-title {
     font-size: 22px;
     font-weight: 300;
     letter-spacing: -0.01em;
-    margin-bottom: 16px;
+    margin-bottom: 12px;
   }
 
   .lightbox-meta {
     font-size: 12px;
     color: var(--mid-grey);
-    line-height: 2;
+    line-height: 1.5;
   }
 
   .lightbox-meta strong {
@@ -468,9 +514,32 @@
     font-weight: 500;
   }
 
+  /* Compact two-column Medium / Size layout */
+  .lightbox-specs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px 20px;
+    font-size: 12px;
+    color: var(--mid-grey);
+  }
+
+  .lightbox-specs .spec-label {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--mid-grey);
+    margin-bottom: 2px;
+  }
+
+  .lightbox-specs .spec-val {
+    color: var(--black);
+    font-weight: 500;
+    line-height: 1.4;
+  }
+
   .lightbox-price-block {
-    margin-top: 24px;
-    padding-top: 24px;
+    margin-top: 16px;
+    padding-top: 16px;
     border-top: 1px solid var(--light-grey);
   }
 
@@ -489,7 +558,7 @@
 
   .lightbox-enquire {
     display: inline-block;
-    margin-top: 16px;
+    margin-top: 14px;
     font-size: 11px;
     letter-spacing: 0.14em;
     text-transform: uppercase;
@@ -693,10 +762,12 @@
     section { padding: 60px 20px; }
     #collection { padding: 60px 16px; }
     .artwork-grid { grid-template-columns: repeat(2, 1fr); gap: 1px; }
-    .lightbox-inner { width: 100%; max-width: 100%; max-height: 100vh; }
-    .lightbox-art { min-height: 62vh; padding: 12px; justify-content: center; }
-    .lightbox-art-img { max-height: 72vh; }
-    .lightbox-detail { padding: 24px; }
+    .lightbox { padding: 0; align-items: flex-end; }
+    .lightbox-inner { width: 100%; max-width: 100%; max-height: 94vh; margin-top: 6vh; border-radius: 12px 12px 0 0; }
+    .lightbox-header { border-radius: 12px 12px 0 0; }
+    .lightbox-art { min-height: 56vh; padding: 12px; justify-content: center; }
+    .lightbox-art-img { max-height: 66vh; }
+    .lightbox-detail { padding: 20px 20px 24px; }
     footer { flex-direction: column; gap: 12px; text-align: center; }
     .footer-rights { align-items: center; text-align: center; }
     .hero-title { font-size: 48px; }
@@ -779,21 +850,24 @@
 
 <!-- ─── LIGHTBOX ─────────────────────────────────────────── -->
 <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Artwork detail">
-  <button class="lightbox-close" onclick="closeLightbox()" aria-label="Close">✕</button>
   <div class="lightbox-inner">
+    <div class="lightbox-header">
+      <span class="lightbox-header-label">Artwork details</span>
+      <button class="lightbox-header-close" onclick="closeLightbox()" aria-label="Close">✕</button>
+    </div>
     <div class="lightbox-art" id="lightboxArt"></div>
     <div class="lightbox-detail">
       <div>
         <p class="section-label" id="lbEdition">Limited Edition</p>
         <h2 class="lightbox-title" id="lbTitle">—</h2>
-        <div class="lightbox-meta" id="lbMeta"></div>
+        <div class="lightbox-specs" id="lbMeta"></div>
       </div>
+      <div class="lightbox-extra" id="lbExtra" hidden></div>
       <div class="lightbox-price-block">
         <p class="lightbox-price-label">Price</p>
         <p class="lightbox-price-val" id="lbPrice">—</p>
         <a class="lightbox-enquire" id="lbEnquire" href="#">Enquire →</a>
       </div>
-      <div class="lightbox-extra" id="lbExtra" hidden></div>
     </div>
   </div>
 </div>
@@ -856,17 +930,17 @@ function openLightbox(i, trigger) {
   document.getElementById('lbEdition').textContent = a.edition;
   document.getElementById('lbPrice').textContent = a.price;
   document.getElementById('lbMeta').innerHTML =
-    `<p><strong>Medium</strong><br>${a.medium}</p>
-     <p><strong>Size</strong><br>${a.size}</p>`;
+    `<div><p class="spec-label">Medium</p><p class="spec-val">${a.medium}</p></div>
+     <div><p class="spec-label">Size</p><p class="spec-val">${a.size}</p></div>`;
   const extraEl = document.getElementById('lbExtra');
   if (a.extra) {
     extraEl.innerHTML =
       `<p class="lightbox-extra-label">Original artwork</p>
        <p class="lightbox-extra-title">${a.extra.title}</p>
-       <div class="lightbox-meta">
-         <p><strong>Medium</strong><br>${a.extra.medium}</p>
-         <p><strong>Size</strong><br>${a.extra.size}</p>
-         <p><strong>Price</strong><br>${a.extra.price}</p>
+       <div class="lightbox-specs">
+         <div><p class="spec-label">Medium</p><p class="spec-val">${a.extra.medium}</p></div>
+         <div><p class="spec-label">Size</p><p class="spec-val">${a.extra.size}</p></div>
+         <div><p class="spec-label">Price</p><p class="spec-val">${a.extra.price}</p></div>
        </div>`;
     extraEl.hidden = false;
   } else {
@@ -877,7 +951,7 @@ function openLightbox(i, trigger) {
     `mailto:hello@ymdart.co.uk?subject=${encodeURIComponent('Enquiry: ' + a.title)}&body=${encodeURIComponent('Hi Yalckun,\n\nI\u2019m interested in "' + a.title + '" and would like to know more.\n\n')}`;
   box.classList.add('open');
   document.body.style.overflow = 'hidden';
-  document.querySelector('.lightbox-close').focus();
+  document.querySelector('.lightbox-header-close').focus();
 }
 
 function closeLightbox() {
