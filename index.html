@@ -354,7 +354,7 @@
     position: fixed;
     inset: 0;
     z-index: 200;
-    background: rgba(0,0,0,0.92);
+    background: var(--white);
     align-items: center;
     justify-content: center;
   }
@@ -363,20 +363,21 @@
 
   .lightbox-inner {
     background: var(--white);
-    max-width: 900px;
+    max-width: 720px;
     width: 90%;
-    max-height: 90vh;
+    max-height: 92vh;
     display: flex;
-    overflow: hidden;
+    flex-direction: column;
+    overflow-y: auto;
   }
 
   .lightbox-art {
-    flex: 1;
+    flex: none;
     min-height: 400px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--light-grey);
+    background: var(--white);
     padding: 28px;
     box-sizing: border-box;
     position: relative;
@@ -399,34 +400,38 @@
     -webkit-user-drag: none;
   }
 
-  .zoom-hint {
-    position: absolute;
-    bottom: 12px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(0,0,0,0.55);
-    color: #fff;
-    font-size: 10px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    padding: 6px 12px;
-    border-radius: 20px;
-    pointer-events: none;
-    transition: opacity 0.3s;
-    display: none;
-  }
-
   .lightbox-detail {
-    width: 280px;
+    width: 100%;
+    box-sizing: border-box;
     flex-shrink: 0;
-    padding: 40px 32px;
-    border-left: 1px solid var(--light-grey);
+    padding: 32px;
+    border-top: 1px solid var(--light-grey);
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
   }
 
   .lightbox-detail .section-label { margin-bottom: 4px; }
+
+  .lightbox-extra {
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px solid var(--light-grey);
+  }
+
+  .lightbox-extra-label {
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--mid-grey);
+    margin-bottom: 6px;
+  }
+
+  .lightbox-extra-title {
+    font-size: 16px;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    margin-bottom: 12px;
+  }
 
   .lightbox-title {
     font-size: 22px;
@@ -671,11 +676,10 @@
     section { padding: 60px 20px; }
     #collection { padding: 60px 16px; }
     .artwork-grid { grid-template-columns: repeat(2, 1fr); gap: 1px; }
-    .lightbox-inner { flex-direction: column; max-height: 95vh; overflow-y: auto; }
+    .lightbox-inner { width: 100%; max-width: 100%; max-height: 100vh; }
     .lightbox-art { min-height: 62vh; padding: 12px; justify-content: center; }
     .lightbox-art-img { max-height: 72vh; }
-    .zoom-hint { display: block; }
-    .lightbox-detail { width: 100%; border-left: none; border-top: 1px solid var(--light-grey); padding: 24px; }
+    .lightbox-detail { padding: 24px; }
     footer { flex-direction: column; gap: 12px; text-align: center; }
     .footer-rights { align-items: center; text-align: center; }
     .hero-title { font-size: 48px; }
@@ -704,7 +708,7 @@
   <div class="hero-accent-line"></div>
   <p class="hero-eyebrow">Original Paintings · Fine Art Prints</p>
   <h1 class="hero-title"><strong>YMD</strong> <span class="hero-title-art">Art</span></h1>
-  <p class="hero-sub">Yalckun has a strong interest in colour and uses his work to explore the way human figures occupy space, conveying both movement and moment of stillness.</p>
+  <p class="hero-sub">Yalckun has a strong interest in colour and uses his work to explore the way human figures occupy space, conveying both movement and moments of stillness.</p>
   <a href="#collection" class="hero-cta">View the Collection</a>
   <p class="hero-scroll-hint">↓ Scroll</p>
 </section>
@@ -772,6 +776,7 @@
         <p class="lightbox-price-val" id="lbPrice">—</p>
         <a class="lightbox-enquire" id="lbEnquire" href="#">Enquire →</a>
       </div>
+      <div class="lightbox-extra" id="lbExtra" hidden></div>
     </div>
   </div>
 </div>
@@ -780,15 +785,16 @@
 const artworks = [
   { title: "Female Portrait",            medium: "Print of original painting", size: "29 × 42 cm",                  price: "£70",       edition: "Available", cls: "art-1",  img: "01-female-portrait.jpg",              w: 1272, h: 1800 },
   { title: "All About My Mother",        medium: "Print of original painting", size: "29.5 × 38.5 cm / 28 × 21 cm", price: "£70 / £40", edition: "Available", cls: "art-4",  img: "02-all-about-my-mother.jpg",          w: 1800, h: 1272 },
-  { title: "Four Dancers",               medium: "Print of digital painting",  size: "29.5 × 41.5 cm",              price: "£70",       edition: "Available", cls: "art-9",  img: "03-four-dancers.jpg",                 w: 1292, h: 1800 },
-  { title: "Four Dancers",               medium: "Print of digital painting",  size: "22 × 41.5 cm",                price: "£70",       edition: "Available", cls: "art-9",  img: "04-four-dancers.jpg",                 w: 957,  h: 1800 },
+  { title: "Four Dancers (magenta)",     medium: "Print of digital painting",  size: "29.5 × 41.5 cm",              price: "£70",       edition: "Available", cls: "art-9",  img: "03-four-dancers.jpg",                 w: 1292, h: 1800 },
+  { title: "Four Dancers (orange)",      medium: "Print of digital painting",  size: "22 × 41.5 cm",                price: "£70",       edition: "Available", cls: "art-9",  img: "04-four-dancers.jpg",                 w: 957,  h: 1800 },
   { title: "From Here",                  medium: "Print of digital painting",  size: "28 × 29.5 cm",                price: "£70",       edition: "Available", cls: "art-7",  img: "05-from-here.jpg",                    w: 1799, h: 1707 },
   { title: "Male Portrait",              medium: "Print of original painting", size: "29.5 × 41.5 cm",              price: "£70",       edition: "Available", cls: "art-2",  img: "06-male-portrait.jpg",                w: 1272, h: 1800 },
   { title: "Portrait of a Couple",       medium: "Print of original painting", size: "29 × 42 cm",                  price: "£70",       edition: "Available", cls: "art-3",  img: "07-portrait-of-a-couple.jpg",         w: 1272, h: 1800 },
   { title: "Study in Blue Green and Red",medium: "Print of original painting", size: "29 × 43 cm",                  price: "£70",       edition: "Available", cls: "art-6",  img: "08-study-in-blue-green-and-red.jpg",  w: 1272, h: 1800 },
   { title: "A Family",                   medium: "Print of digital painting",  size: "30 × 30 cm / 21 × 21 cm",     price: "£70 / £40", edition: "Available", cls: "art-8",  img: "09-a-family.jpg",                     w: 1800, h: 1800 },
   { title: "Mabel",                      medium: "Print of digital painting",  size: "32 × 30 cm / 21 × 19 cm",     price: "£70 / £40", edition: "Available", cls: "art-10", img: "10-mabel.jpg",                        w: 1800, h: 1664 },
-  { title: "Family Portrait",            medium: "Print of original painting", size: "28 × 42 cm",                  price: "£70",       edition: "Available", cls: "art-5",  img: "11-family-portrait.jpg",              w: 1272, h: 1800 }
+  { title: "Family Portrait",            medium: "Print of original painting", size: "28 × 42 cm",                  price: "£70",       edition: "Available", cls: "art-5",  img: "11-family-portrait.jpg",              w: 1272, h: 1800,
+    extra: { title: "Family Portrait original", medium: "Acrylics, oil stick and chalk on wood panel", size: "Width 61 cm × Height 92 cm", price: "POA" } }
 ];
 
 // Build grid
@@ -826,7 +832,7 @@ function openLightbox(i, trigger) {
   const a = artworks[i];
   const box = document.getElementById('lightbox');
   document.getElementById('lightboxArt').className = 'lightbox-art';
-  document.getElementById('lightboxArt').innerHTML = `<img class="lightbox-art-img" src="images/${a.img}" alt="${a.title}, ${a.medium}"><span class="zoom-hint">Pinch or double-tap to zoom</span>`;
+  document.getElementById('lightboxArt').innerHTML = `<img class="lightbox-art-img" src="images/${a.img}" alt="${a.title}, ${a.medium}">`;
   resetZoom();
   document.getElementById('lbTitle').textContent = a.title;
   document.getElementById('lbEdition').textContent = a.edition;
@@ -834,6 +840,21 @@ function openLightbox(i, trigger) {
   document.getElementById('lbMeta').innerHTML =
     `<p><strong>Medium</strong><br>${a.medium}</p>
      <p><strong>Size</strong><br>${a.size}</p>`;
+  const extraEl = document.getElementById('lbExtra');
+  if (a.extra) {
+    extraEl.innerHTML =
+      `<p class="lightbox-extra-label">Original artwork</p>
+       <p class="lightbox-extra-title">${a.extra.title}</p>
+       <div class="lightbox-meta">
+         <p><strong>Medium</strong><br>${a.extra.medium}</p>
+         <p><strong>Size</strong><br>${a.extra.size}</p>
+         <p><strong>Price</strong><br>${a.extra.price}</p>
+       </div>`;
+    extraEl.hidden = false;
+  } else {
+    extraEl.innerHTML = '';
+    extraEl.hidden = true;
+  }
   document.getElementById('lbEnquire').href =
     `mailto:hello@ymdart.co.uk?subject=${encodeURIComponent('Enquiry: ' + a.title)}&body=${encodeURIComponent('Hi Yalckun,\n\nI\u2019m interested in "' + a.title + '" and would like to know more.\n\n')}`;
   box.classList.add('open');
