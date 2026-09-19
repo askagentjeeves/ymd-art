@@ -863,9 +863,11 @@
         <div class="lightbox-specs" id="lbMeta"></div>
       </div>
       <div class="lightbox-extra" id="lbExtra" hidden></div>
-      <div class="lightbox-price-block">
-        <p class="lightbox-price-label">Price</p>
-        <p class="lightbox-price-val" id="lbPrice">—</p>
+      <div class="lightbox-price-block" id="lbPriceBlock">
+        <div id="lbPriceRow">
+          <p class="lightbox-price-label">Price</p>
+          <p class="lightbox-price-val" id="lbPrice">—</p>
+        </div>
         <a class="lightbox-enquire" id="lbEnquire" href="#">Enquire →</a>
       </div>
     </div>
@@ -929,11 +931,15 @@ function openLightbox(i, trigger) {
   document.getElementById('lbTitle').textContent = a.title;
   document.getElementById('lbEdition').textContent = a.edition;
   document.getElementById('lbPrice').textContent = a.price;
-  document.getElementById('lbMeta').innerHTML =
-    `<div><p class="spec-label">Medium</p><p class="spec-val">${a.medium}</p></div>
-     <div><p class="spec-label">Size</p><p class="spec-val">${a.size}</p></div>`;
+  const priceRow = document.getElementById('lbPriceRow');
   const extraEl = document.getElementById('lbExtra');
   if (a.extra) {
+    // Price belongs with the available print, so show it inline with the print
+    // details; the shared bottom price block is hidden (keeping Enquire).
+    document.getElementById('lbMeta').innerHTML =
+      `<div><p class="spec-label">Medium</p><p class="spec-val">${a.medium}</p></div>
+       <div><p class="spec-label">Size</p><p class="spec-val">${a.size}</p></div>
+       <div><p class="spec-label">Price</p><p class="spec-val">${a.price}</p></div>`;
     extraEl.innerHTML =
       `<p class="lightbox-extra-label">Original artwork</p>
        <p class="lightbox-extra-title">${a.extra.title}</p>
@@ -943,9 +949,14 @@ function openLightbox(i, trigger) {
          <div><p class="spec-label">Price</p><p class="spec-val">${a.extra.price}</p></div>
        </div>`;
     extraEl.hidden = false;
+    priceRow.hidden = true;
   } else {
+    document.getElementById('lbMeta').innerHTML =
+      `<div><p class="spec-label">Medium</p><p class="spec-val">${a.medium}</p></div>
+       <div><p class="spec-label">Size</p><p class="spec-val">${a.size}</p></div>`;
     extraEl.innerHTML = '';
     extraEl.hidden = true;
+    priceRow.hidden = false;
   }
   document.getElementById('lbEnquire').href =
     `mailto:hello@ymdart.co.uk?subject=${encodeURIComponent('Enquiry: ' + a.title)}&body=${encodeURIComponent('Hi Yalckun,\n\nI\u2019m interested in "' + a.title + '" and would like to know more.\n\n')}`;
